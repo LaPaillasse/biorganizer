@@ -1,0 +1,7 @@
+lapaillasse_user_homepage:
+    pattern:  /
+    defaults: { _controller: LapaillasseUserBundle:Default:index }
+
+lapaillasse_user_profil_edit:
+    pattern: /user/profil/edit
+    defaults: { _controller: LapaillasseUserBundle:Default:userProfilEdit }

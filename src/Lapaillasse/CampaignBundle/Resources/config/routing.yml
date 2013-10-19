@@ -1,0 +1,3 @@
+lapaillasse_campaign_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: LapaillasseCampaignBundle:Default:index }

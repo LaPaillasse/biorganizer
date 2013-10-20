@@ -75,3 +75,5 @@ fos_user:
     registration:
         confirmation:
             enabled: true
+        form:
+            type: lapaillasse_user_registration

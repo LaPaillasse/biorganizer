@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome to campaign manager!{% endblock %}</title>
+        
+        {% block stylesheets %}
+        {% endblock %}
+
+            {% stylesheets '@LapaillasseCampaignBundle/Resources/public/css/*' output='css/style.css' filter='cssrewrite' %}
+                <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div id="page">
+            <header id="master-header" role="banner">
+
+                <div id="navbar">
+                    <nav id="site-navigation">
+                        <ul>
+                            <li><a href="index.php" id="home">Campaign Manager</a></li>
+                            <li><a href="map.php">Map</a></li>
+                        </ul>
+                        <div id="menu-account">
+                            <ul>
+                                <li>
+
+                                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                        <a href="#">{{app.user.username}} <span></span></a>                                        
+                                        <ul class="nav-menu">
+                                            <li>
+                                                <a href="{{ path('fos_user_security_logout') }}">Logout</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="{{ path('lapaillasse_user_profil_edit') }}">Profil</a>
+                                            </li>
+                                        </ul>
+                                    {% else %}
+                                        <a href="{{ path('fos_user_security_login') }}">Sign up</a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+
+                {% block banner %}{% endblock %}
+
+            </header>
+
+            <div id="main">
+                <div id="primary" class="content-area">
+
+                    {% block body %}{% endblock %}
+
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+        {% javascripts '@LapaillasseCampaignBundle/Resources/public/js/*' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    </body>
+</html>

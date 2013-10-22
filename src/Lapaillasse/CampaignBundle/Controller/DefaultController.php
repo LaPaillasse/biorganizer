@@ -10,4 +10,9 @@ class DefaultController extends Controller
     {
         return $this->render('LapaillasseCampaignBundle:Front:index.html.twig');
     }
+
+    public function mapAction()
+    {
+        return $this->render('LapaillasseCampaignBundle:Front:map.html.twig');
+    }
 }

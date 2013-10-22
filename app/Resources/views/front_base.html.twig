@@ -7,9 +7,9 @@
         {% block stylesheets %}
         {% endblock %}
 
-            {% stylesheets '@LapaillasseCampaignBundle/Resources/public/css/*' output='css/style.css' filter='cssrewrite' %}
-                <link rel="stylesheet" href="{{ asset_url }}" />
-            {% endstylesheets %}
+        {% stylesheets '@LapaillasseCampaignBundle/Resources/public/css/*' output='css/style.css' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
@@ -19,8 +19,8 @@
                 <div id="navbar">
                     <nav id="site-navigation">
                         <ul>
-                            <li><a href="index.php" id="home">Campaign Manager</a></li>
-                            <li><a href="map.php">Map</a></li>
+                            <li><a href="{{ path('lapaillasse_campaign_homepage') }}" id="home">Campaign Manager</a></li>
+                            <li><a href="{{ path('lapaillasse_campaign_mappage') }}">Map</a></li>
                         </ul>
                         <div id="menu-account">
                             <ul>

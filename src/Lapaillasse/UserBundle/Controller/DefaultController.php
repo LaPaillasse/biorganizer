@@ -10,9 +10,4 @@ class DefaultController extends Controller
     {
         return $this->render('LapaillasseUserBundle:Default:index.html.twig');
     }
-
-    public function userProfilEditAction()
-    {
-    	return $this->render('LapaillasseUserBundle:Default:user-profil-edit.html.twig');
-    }
 }

@@ -13,5 +13,33 @@
 {% endblock %}
 
 {% block body %}
-	Hello front !
+	<div id="campaign-list">
+		{% for campaign in campaigns %}
+			<article class="campaign-item">
+				<div class="image" style="background: url(images/biochineur.jpg);">		
+				</div>
+				<div class="informations">
+					<a href="{{ path('lapaillasse_map_campaign_view', { 'id': campaign.id }) }}"><h1>{{ campaign.name }}</h1></a>
+					<div class="about">
+						<div class="instigator">
+							by <a href="#">La paillasse</a>	
+						</div>
+						<div class="community">
+							<span></span>
+							<a href="#">Biohackers</a>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<ul class="statistics">
+						<li>
+							<span></span>
+							102
+						</li>
+						<li></li>
+					</ul>
+				</div>
+			</article>
+		{% endfor %}
+
+	</div><!-- campaign-list-->
 {% endblock %}

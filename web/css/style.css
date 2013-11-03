@@ -1,5 +1,15 @@
+#register-confirm-bt{
+	display: none;
+}
+
 #map {
-	height: 180px;
+	height: 1000px;
+	width: 100%;
+}
+
+#registration-map{
+	height: 1000px;
+	
 	width: 100%;
 }
 /*

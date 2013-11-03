@@ -6,7 +6,7 @@
         
         {% block stylesheets %}
         {% endblock %}
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         {% stylesheets '@LapaillasseCampaignBundle/Resources/public/css/*' output='css/style.css' filter='cssrewrite' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
@@ -30,10 +30,13 @@
                                         <a href="#">{{app.user.username}} <span></span></a>                                        
                                         <ul class="nav-menu">
                                             <li>
+                                                <a href="{{ path('lapaillasse_campaign_new_campaign') }}">New campaign</a>
+                                            </li>
+                                            <li>
                                                 <a href="{{ path('fos_user_security_logout') }}">Logout</a>
                                             </li>
                                             <li class="menu-item">
-                                                <a href="{{ path('lapaillasse_user_profil_edit') }}">Profil</a>
+                                                <a href="{{ path('fos_user_profile_show') }}">Profil</a>
                                             </li>
                                         </ul>
                                     {% else %}
@@ -58,8 +61,5 @@
             </div>
         </div>
         {% block javascripts %}{% endblock %}
-        {% javascripts '@LapaillasseCampaignBundle/Resources/public/js/*' %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
     </body>
 </html>

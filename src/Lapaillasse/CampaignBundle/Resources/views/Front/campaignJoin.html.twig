@@ -1,0 +1,102 @@
+{% extends '::front_base.html.twig' %}
+
+{% block title %}Join campaign{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+<h1>Join {{ campaign.name }}</h1>
+<h2>To join this campaign, please, fill this form :</h2>
+<form action="#" id="join-campaign-form">
+	
+</form>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		var options = jQuery.parseJSON('{{ campaign.optionalfield|raw }}');
+		var joinCampaignForm = document.getElementById('join-campaign-form');
+		
+		for(var i = 0;i<options.options.length;i++){
+
+			var p = document.createElement("p");
+
+		    // Création du conteneur du nom du champ
+		    var label = document.createElement('h3');
+			label.htmlFor = "";
+			var textLabel = options.options[i].name;
+			label.appendChild(document.createTextNode(textLabel));
+
+			p.appendChild(label);
+
+			switch(options.options[i].type){				    	
+				case 'text' :
+					var element = document.createElement('input');
+					element.className = "option-field";
+				    element.name = '';
+				    element.type = 'text';
+				    p.appendChild(element);
+				break;
+				case 'select' :
+					var select = document.createElement('select');
+					select.htmlFor = "id";
+					select.className = "option-field";
+				    select.name = '';
+				    p.appendChild(select);
+				break;
+			}
+
+			if(options.options[i].terms){
+				for(var y = 0;y<options.options[i].terms.length;y++){
+					switch(options.options[i].type){
+						case 'radio' :
+							var element = document.createElement('input');
+							element.className = "option-field";
+						    element.name = 'radio-'+i;
+						    element.type = 'radio';
+						    p.appendChild(element);
+
+						    var label = document.createElement('label');
+							label.htmlFor = "id";
+							var textLabel = options.options[i].terms[y].label;
+							label.appendChild(document.createTextNode(textLabel));
+							p.appendChild(label);
+						break;
+						case 'checkbox' :
+							var element = document.createElement('input');
+							element.className = "option-field";
+						    element.name = 'checkbox';
+						    element.type = 'checkbox';
+						    p.appendChild(element);
+
+						    var label = document.createElement('label');
+							label.htmlFor = "id";
+							var textLabel = options.options[i].terms[y].label;
+							label.appendChild(document.createTextNode(textLabel));
+							p.appendChild(label);
+						break;
+						case 'select' :
+							var element = document.createElement('option');
+							element.name = "opt-";
+							element.value = options.options[i].terms[y].label;
+
+							var textOption = options.options[i].terms[y].label;
+							element.appendChild(document.createTextNode(textOption));
+							
+
+							select.appendChild(element);
+						break;
+					}
+				}
+			}
+
+			joinCampaignForm.appendChild(p);
+		}
+
+		var element = document.createElement('input');
+		element.type = 'submit';
+		element.value = 'Envoyer';
+		joinCampaignForm.appendChild(element);
+	</script>
+{% endblock %}

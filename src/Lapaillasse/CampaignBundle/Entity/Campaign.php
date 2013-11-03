@@ -32,12 +32,21 @@ class Campaign
      * User ID
      * @ORM\Column(type="integer")
      */
-    protected $_creator;
+    protected $creator;
 
     /**
-     * @ORM\Column(name="option", type="array")
+     * @ORM\Column(name="optionalfield")
+     * @ORM\Column(type="text", length=4294967295)
      */
-    private $option;
+    private $optionalfield;
+
+    /**
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    
 
     /**
      * Get id
@@ -73,6 +82,29 @@ class Campaign
     }
 
     /**
+     * Set description
+     *
+     * @param string $description
+     * @return Campaign
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set creator
      *
      * @param integer $creator
@@ -96,48 +128,48 @@ class Campaign
     }
 
     /**
-     * Set option
+     * Set optionalfield
      *
-     * @param array $option
+     * @param string $optionalfield
      * @return Campaign
      */
-    public function setOption($option)
+    public function setOptionalfield($optionalfield)
     {
-        $this->option = $option;
+        $this->optionalfield = $optionalfield;
     
         return $this;
     }
 
     /**
-     * Get option
-     *
-     * @return array 
-     */
-    public function getOption()
-    {
-        return $this->option;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Campaign
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    
-        return $this;
-    }
-
-    /**
-     * Get description
+     * Get optionalfield
      *
      * @return string 
      */
-    public function getDescription()
+    public function getOptionalfield()
     {
-        return $this->description;
+        return $this->optionalfield;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Campaign
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

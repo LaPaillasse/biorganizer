@@ -1,6 +1,6 @@
 {% extends '::front_base.html.twig' %}
 
-{% block title %}Campaign Manager Map{% endblock %}
+{% block title %}{{ campaign.name }} map{% endblock %}
 
 {% block stylesheets %}
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block body %}
+	<a href="{{ path('lapaillasse_campaign_join', { 'id': campaign.id }) }}" class="button">Join the campaign</a>
 	<div id="map"></div>
 {% endblock %}
 

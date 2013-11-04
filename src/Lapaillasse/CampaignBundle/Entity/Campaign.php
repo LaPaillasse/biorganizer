@@ -35,8 +35,7 @@ class Campaign
     protected $creator;
 
     /**
-     * @ORM\Column(name="optionalfield")
-     * @ORM\Column(type="text", length=4294967295)
+     * @ORM\Column(name="optionalfield", type="text")
      */
     private $optionalfield;
 

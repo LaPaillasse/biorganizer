@@ -4,6 +4,7 @@ namespace Lapaillasse\CampaignBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Lapaillasse\CampaignBundle\Entity\Campaign;
+use Lapaillasse\CampaignBundle\Entity\UserOptionsForCampaign;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -44,9 +45,7 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la campagne dans la bdd
-            //echo "ok";
-            
+            // Sauvegarder la campagne dans la bdd            
             $campaign->setCreated(new \Datetime());
             $em = $this->getDoctrine()->getManager();
 
@@ -78,7 +77,15 @@ class DefaultController extends Controller
 
         $campaign = $repository->find($id);
 
+        // Crée l'objet d'option de campagne
+        $UserOptionsForCampaign = new UserOptionsForCampaign();
+
+        $form = $this->createFormBuilder($UserOptionsForCampaign)
+            ->add('user_options', 'text')
+            ->getForm();
+            
         return $this->render('LapaillasseCampaignBundle:Front:campaignJoin.html.twig', array(
+            'form' => $form->createView(),
             'campaign' => $campaign
         ));
     }

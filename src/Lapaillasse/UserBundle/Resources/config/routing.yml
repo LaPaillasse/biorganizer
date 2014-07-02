@@ -1,0 +1,3 @@
+lapaillasse_user_homepage:
+    pattern:  /
+    defaults: { _controller: LapaillasseUserBundle:Default:index }

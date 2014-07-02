@@ -1,0 +1,7 @@
+parameters:
+#    lapaillasse_campaign.example.class: Lapaillasse\CampaignBundle\Example
+
+services:
+#    lapaillasse_campaign.example:
+#        class: %lapaillasse_campaign.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

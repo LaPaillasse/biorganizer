@@ -25,7 +25,10 @@ monolog:
             level: info
 
 assetic:
-    use_controller: true
+    debug:          %kernel.debug%
+    use_controller: false
+    filters:
+        cssrewrite: ~
 
 #swiftmailer:
 #    delivery_address: me@example.com

@@ -1,0 +1,19 @@
+lapaillasse_campaign_homepage:
+    pattern:  /
+    defaults: { _controller: LapaillasseCampaignBundle:Default:index }
+
+lapaillasse_campaign_mappage:
+    pattern:  /map/
+    defaults: { _controller: LapaillasseCampaignBundle:Default:map }
+
+lapaillasse_campaign_new_campaign:
+    pattern: new/campaign/
+    defaults: { _controller: LapaillasseCampaignBundle:Default:newCampaign }
+
+lapaillasse_map_campaign_view:
+    pattern: map/campaign/{id}
+    defaults: { _controller: LapaillasseCampaignBundle:Default:mapCampaignView }
+
+lapaillasse_campaign_join:
+    pattern: campaign/join/{id}
+    defaults: { _controller: LapaillasseCampaignBundle:Default:campaignJoin }

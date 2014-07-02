@@ -1,0 +1,136 @@
+{% extends '::front_base.html.twig' %}
+
+{% block title %}Join campaign{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+<h1>Join {{ campaign.name }}</h1>
+<h2>To join this campaign, please, fill this form :</h2>
+
+<form action="#" id="join-campaign-form">
+	
+</form>
+
+{{ form_start(form) }}
+		{{ form_errors(form) }}
+		
+		{{ form_row(form.user_options) }}
+
+		<input type="submit" value="Join" />
+{{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		/**
+		 * Gestion de l'affichage du formulaire
+		 */
+		var options = jQuery.parseJSON('{{ campaign.optionalfield|raw }}');
+		var joinCampaignForm = document.getElementById('join-campaign-form');
+		
+		for(var i = 0;i<options.options.length;i++){
+
+			var p = document.createElement("p");
+
+		    // Création du conteneur du nom du champ
+		    var label = document.createElement('h3');
+			label.htmlFor = "";
+			var textLabel = options.options[i].name;
+			label.appendChild(document.createTextNode(textLabel));
+
+			p.appendChild(label);
+
+			switch(options.options[i].type){				    	
+				case 'text' :
+					var element = document.createElement('input');
+					element.className = "option-field";
+				    element.name = '';
+				    element.id = i;
+				    element.type = 'text';
+				    p.appendChild(element);
+				break;
+				case 'select' :
+					var select = document.createElement('select');
+					select.htmlFor = "id";
+					element.id = i;
+					select.className = "option-field";
+				    select.name = '';
+				    p.appendChild(select);
+				break;
+			}
+
+			if(options.options[i].terms){
+				for(var y = 0;y<options.options[i].terms.length;y++){
+					switch(options.options[i].type){
+						case 'radio' :
+							var element = document.createElement('input');
+							element.className = "option-field";
+						    element.name = 'radio-'+i;
+						    element.id = i+'-'+y;
+						    element.type = 'radio';
+						    p.appendChild(element);
+
+						    var label = document.createElement('label');
+							label.htmlFor = i+'-'+y;
+							var textLabel = options.options[i].terms[y].label;
+							label.appendChild(document.createTextNode(textLabel));
+							p.appendChild(label);
+						break;
+						case 'checkbox' :
+							var element = document.createElement('input');
+							element.className = "option-field";
+						    element.name = 'checkbox';
+						    element.id = i+'-'+y;
+						    element.type = 'checkbox';
+						    p.appendChild(element);
+
+						    var label = document.createElement('label');
+							label.htmlFor = i+'-'+y;
+							var textLabel = options.options[i].terms[y].label;
+							label.appendChild(document.createTextNode(textLabel));
+							p.appendChild(label);
+						break;
+						case 'select' :
+							var element = document.createElement('option');
+							element.name = "opt-";
+							element.id = i+'-'+y;
+							element.value = options.options[i].terms[y].label;
+
+							var textOption = options.options[i].terms[y].label;
+							element.appendChild(document.createTextNode(textOption));
+							
+							select.appendChild(element);
+						break;
+					}
+				}
+			}
+
+			joinCampaignForm.appendChild(p);
+		}
+
+		/**
+		 * Gestion des input utilisateur et de l'enregistrement de ses réponses
+		 */
+		
+		/* Supprimer un noeud
+		delete options.options[0].name;*/
+
+		/* Ajouter un noeud
+		options.options[0].test = "'nouveau'";*/
+
+		// To do : Une fonction qui va se déclanche à la validation du formulaire pour checker les options choisies ?
+
+		// Detect si un bouton radio a été selectionné
+  		var rad = document.getElementsByTagName('input');
+		var value;
+		for (var i = 0; i < rad.length; i++) {
+		    rad[i].onclick = function() {
+		        console.log('da');
+		    }
+		}
+
+	</script>
+{% endblock %}

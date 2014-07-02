@@ -1,0 +1,452 @@
+{% extends '::front_base.html.twig' %}
+
+{% block title %}New campaign{% endblock %}
+
+{% block body %}
+	<h1>Add a new campaign</h1>
+
+	{{ form_start(form) }}
+		{{ form_errors(form) }}
+
+	    {{ form_row(form.name) }}
+	    {{ form_row(form.description) }}
+	    {{ form_row(form.creator) }}
+	    {{ form_row(form.optionalfield) }}
+		<div id="options-zone-hidden">
+			
+		</div>
+		
+		<h2>Add an option : </h2>
+		Option name : <input id="option-name" type="text">
+		Type :	
+		<select name="cars">
+			<option value="text" selected>Text field</option>
+			<option value="radio">QCM</option>
+			<option value="checkbox">Checkboxs</option>
+			<option value="select">Drop-down list</option>
+		</select>
+		<a href="#" style="border: 1px solid grey;padding:2px" id="form_add_an_option">Add</a>
+		<div id="options-fields">
+			
+		</div>
+		<a id="add-option-field" href="#" style="display:none;">Add option field</a>
+		<a id="validate-option-field" href="#" style="display:none;">Validate</a>
+		<a id="cancel-option-field" href="#" style="display:none;">Cancel</a>
+		<br><br><br>
+		<input type="submit" value="Create" />
+	{{ form_end(form) }}
+	
+	<div id="restulat-options">
+		<h2>Preview</h2>
+		<div id="preview">
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		var currentOptionAdded = 'none';
+		var count = 0;
+		var optionCount = 0;
+		var textCount = 0;
+		hiddenOptionZone = document.getElementById('options-zone-hidden');
+
+		// Si l'on clic sur le boutton pour ajouter une option
+		$('#form_add_an_option').click(function(){
+			if( $('#option-name').val() != '' ){
+				var optionType = $( "select option:selected" ).val();
+
+			  	switch( optionType ){
+			  		case 'text' :
+			  			currentOptionAdded = 'text';
+			  			createTextInput();
+			  		break;
+
+			  		case 'radio' :
+			  			currentOptionAdded = 'radio';
+			  			createRadioInput();
+			  			$('#add-option-field, #validate-option-field, #cancel-option-field').css('display','initial');
+			  		break;
+
+				  	case 'checkbox' :
+				  		currentOptionAdded = 'checkbox';
+				  		createCheckboxInput();
+				  		$('#add-option-field, #validate-option-field, #cancel-option-field').css('display','initial');
+				  	break;
+
+				  	case 'select' :
+				  		currentOptionAdded = 'select';
+				  		createSelectInput();
+				  		$('#add-option-field, #validate-option-field, #cancel-option-field').css('display','initial');
+			  		break;
+			  	}
+
+			}else{
+				alert('You must enter a name for this option !');
+			}
+		});
+
+		// Si on veut ajouter un champ à une option
+		$('#add-option-field').click(function(){
+
+			// Test si un option est déjà en court de création et si oui de quel type elle est
+			if( currentOptionAdded != 'none' ){
+				switch( currentOptionAdded ){
+					case 'text' :
+					break;
+
+					case 'radio' :
+						createRadioInput();
+					break;
+
+					case 'checkbox' :
+						createCheckboxInput();
+					break;					
+
+					case 'select' :
+						createSelectInput();
+					break;
+				}
+			}
+
+		});
+
+		// Si on valide les champs d'une nouvelle option
+		$('#validate-option-field').click(function(){
+			var optionName = $('#option-name').val();
+
+			// Ajouter le nom de l'option dans preview
+			var h3 = document.createElement("h3");
+			h3.id = 'h3-opt'+optionCount;
+			var preview = document.getElementById("preview");
+			preview.appendChild(h3);
+			document.getElementById('h3-opt'+optionCount).innerHTML = optionName;
+
+			// Tester le type de l'option qui viens d'être validé
+			if( currentOptionAdded != 'none' ){
+				switch( currentOptionAdded ){
+
+					case 'checkbox':
+					// Générer et afficher le champ et les options dans la preview
+						for(var i=1;i<count+1;i++){
+							var checkbox = document.createElement('input');
+							checkbox.type = "checkbox";
+							checkbox.name = "name";
+							checkbox.value = "value";
+							checkbox.id = "opt-"+optionCount+"checkbox-"+i;
+
+							var label = document.createElement('label');
+							label.htmlFor = "id";
+							var textLabel = $("#opt-"+optionCount+"checkbox-"+i).val();
+							label.appendChild(document.createTextNode(textLabel));
+
+							preview.appendChild(checkbox);
+							preview.appendChild(label);
+						}
+
+						// Créer un nouveau champ input hidden et y enregistrer l'option sous form d'array.
+						// Récupération des champs enregistrés
+						var optionName = $('#option-name').val();
+						var inputOption = document.createElement('input');
+						var optionType = $( "select option:selected" ).val();
+						var checkboxNode = '';
+						for(var i=1;i<count+1;i++){ // Récupération des checkbox
+							var checkboxRec = document.getElementById("opt-"+optionCount+"checkbox-"+i);
+							if( i == count ){
+								// SI dernier élément de la liste, ne pas mettre de virgule à la fin
+								checkboxNode += '{"label": "'+checkboxRec.value+'"}';
+							}else{
+								// Sinon en mettre une
+								checkboxNode += '{"label": "'+checkboxRec.value+'"},';
+							}
+						}
+
+						// Création du champ
+						inputOption.type = "hidden";
+						inputOption.name = "option";
+						inputOption.className = "option-field";
+						inputOption.className = "option-field";
+						inputOption.value = '{ "name": "'+optionName+'", "type" : "'+optionType+'","terms" : ['+checkboxNode+'] }';
+						hiddenOptionZone.appendChild(inputOption);
+
+						majOptionField(inputOption.value); // Mettre à jour le champ d'enregistrement des options en JSON
+						optionCount++;
+
+						clearOptionAdd();
+
+					break;
+
+					case 'radio' :
+						// Générer et afficher le champ et les options dans la preview
+						for(var i=1;i<count+1;i++){
+							var checkbox = document.createElement('input');
+							checkbox.type = "radio";
+							checkbox.name = "opt-"+optionCount;
+							checkbox.value = "value";
+							checkbox.id = "opt-"+optionCount+"radio-"+i;
+
+							var label = document.createElement('label');
+							label.htmlFor = "id";
+							var textLabel = $("#opt-"+optionCount+"radio-"+i).val();
+							label.appendChild(document.createTextNode(textLabel));
+
+							preview.appendChild(checkbox);
+							preview.appendChild(label);
+						}
+
+						// Créer un nouveau champ input hidden et y enregistrer l'option sous form d'array.
+						// Récupération des champs enregistrés
+						var optionName = $('#option-name').val();
+						var inputOption = document.createElement('input');
+						var optionType = $( "select option:selected" ).val();
+						var checkboxNode = '';
+						for(var i=1;i<count+1;i++){ // Récupération des checkbox
+							var checkboxRec = document.getElementById("opt-"+optionCount+"radio-"+i);
+							if( i == count ){
+								// SI dernier élément de la liste, ne pas mettre de virgule à la fin
+								checkboxNode += '{"label": "'+checkboxRec.value+'"}';
+							}else{
+								// Sinon en mettre une
+								checkboxNode += '{"label": "'+checkboxRec.value+'"},';
+							}
+						}
+
+						// Création du champ
+						inputOption.type = "hidden";
+						inputOption.name = "option";
+						inputOption.className = "option-field";
+						inputOption.value = '{ "name": "'+optionName+'", "type" : "'+optionType+'","terms" : ['+checkboxNode+'] }';
+						hiddenOptionZone.appendChild(inputOption);
+
+						majOptionField(inputOption.value); // Mettre à jour le champ d'enregistrement des options en JSON
+						optionCount++;
+
+						clearOptionAdd();
+
+					break;
+
+					case 'select' :
+						// Création du select
+						var select = document.createElement('select');
+						select.htmlFor = "id";
+						preview.appendChild(select);
+
+						// To do : création et insertion des options dans le select
+						for(var i=1;i<count+1;i++){
+
+							var option = document.createElement('option');
+							option.type = "select";
+							option.name = "opt-"+optionCount;
+							option.value = $("#opt-"+optionCount+"select-"+i).val();
+							option.id = "opt-"+optionCount+"select-"+i;
+
+							var textOption = $("#opt-"+optionCount+"select-"+i).val();
+							option.appendChild(document.createTextNode(textOption));
+							
+							select.appendChild(option);
+							
+						}
+
+						// Créer un nouveau champ input hidden et y enregistrer l'option sous form d'array.
+						// Récupération des champs enregistrés
+						var optionName = $('#option-name').val();
+						var inputOption = document.createElement('input');
+						var optionType = $( "select option:selected" ).val();
+						var checkboxNode = '';
+						for(var i=1;i<count+1;i++){ // Récupération des checkbox
+							var checkboxRec = document.getElementById("opt-"+optionCount+"select-"+i);
+							if( i == count ){
+								// SI dernier élément de la liste, ne pas mettre de virgule à la fin
+								checkboxNode += '{"label": "'+checkboxRec.value+'"}';
+							}else{
+								// Sinon en mettre une
+								checkboxNode += '{"label": "'+checkboxRec.value+'"},';
+							}
+						}
+
+						// Création du champ
+						inputOption.type = "hidden";
+						inputOption.name = "option";
+						inputOption.className = "option-field";
+						inputOption.value = '{"name": "'+optionName+'", "type" : "'+optionType+'","terms" : ['+checkboxNode+']}';
+						hiddenOptionZone.appendChild(inputOption);
+
+						majOptionField(inputOption.value); // Mettre à jour le champ d'enregistrement des options en JSON
+						optionCount++;
+
+						clearOptionAdd();
+					break;
+
+				}
+			}
+		});// validate-option-field function
+
+		// Si on annule la création d'une nouvelle option
+		$('#cancel-option-field').click(function(){
+			$('#options-fields').html('');
+			$('#option-name').val('');
+			$('#add-option-field, #validate-option-field, #cancel-option-field').css('display','none');
+		});
+
+		function clearOptionAdd(){
+			// Clear les valeurs en entrée de l'ajout d'option
+			document.getElementById('options-fields').innerHTML = '';
+			document.getElementById('option-name').value = "";
+			$('#add-option-field, #validate-option-field, #cancel-option-field').css('display','none');
+			count = 0;
+		}
+
+		/**
+		 * Les fonctions de création des champs
+		 */
+		function createTextInput(){
+			count++;
+
+			// Générer et afficher le champ dans la preview
+			var checkbox = document.createElement('input');
+			checkbox.type = "text";
+			checkbox.name = "opt-"+optionCount;
+			checkbox.placeholder = $('#option-name').val();
+			checkbox.id = "textfield"+textCount;
+
+			var h3 = document.createElement("h3");
+			h3.id = 'h3-text'+textCount;
+			var preview = document.getElementById("preview");
+			preview.appendChild(h3);
+			document.getElementById('h3-text'+textCount).innerHTML = $('#option-name').val();
+
+			//preview.appendChild(label);
+			preview.appendChild(checkbox);
+
+			// Création du champ hidden contenant la donnée
+		    var optionName = $('#option-name').val();
+			var inputOption = document.createElement('input');
+			var optionType = $( "select option:selected" ).val();
+			inputOption.type = "hidden";
+			inputOption.name = "option";
+			inputOption.className = "option-field";
+			inputOption.value = '{ "name": "'+optionName+'", "type" : "'+optionType+'" }';
+			hiddenOptionZone.appendChild(inputOption);
+
+			majOptionField(inputOption.value); // Mettre à jour le champ d'enregistrement des options en JSON
+			optionCount++;
+			textCount++;
+
+			clearOptionAdd(); // Clear les valeurs en entrée de l'ajout d'option
+		}
+
+		function createRadioInput(){
+			count++;
+		    field_area = document.getElementById('options-fields');
+			var div = document.createElement("div");
+
+		    var input = document.createElement("input");
+		    input.id = "opt-"+optionCount+"radio-"+count;
+		    input.name = 'checkbox'+count;
+		    input.placeholder = "Choix "+count;
+		    input.type = "text"; //Type of field - can be any valid input type like text,file,checkbox etc.
+		    div.appendChild(input);
+
+		    field_area.appendChild(div);
+		    //create the removal link
+		    var removalLink = document.createElement('a');
+		    removalLink.onclick = function(){
+		        this.parentNode.parentNode.removeChild(this.parentNode)
+		    }
+		    var removalText = document.createTextNode('Remove');
+		    removalLink.appendChild(removalText);
+		    div.appendChild(removalLink);
+		}
+
+		function createCheckboxInput(){
+			count++;
+		    field_area = document.getElementById('options-fields');
+			var div = document.createElement("div");
+
+		    var input = document.createElement("input");
+		    input.id = "opt-"+optionCount+"checkbox-"+count;
+		    input.name = 'checkbox'+count;
+		    input.placeholder = "Choix "+count;
+		    input.type = "text"; //Type of field - can be any valid input type like text,file,checkbox etc.
+		    div.appendChild(input);
+
+		    field_area.appendChild(div);
+		    //create the removal link
+		    var removalLink = document.createElement('a');
+		    removalLink.onclick = function(){
+		        this.parentNode.parentNode.removeChild(this.parentNode)
+		    }
+		    var removalText = document.createTextNode('Remove');
+		    removalLink.appendChild(removalText);
+		    div.appendChild(removalLink);
+		}
+
+		function createSelectInput(){
+			count++;
+		    field_area = document.getElementById('options-fields');
+			var div = document.createElement("div");
+
+		    var input = document.createElement("input");
+		    input.id = "opt-"+optionCount+"select-"+count;
+		    input.name = 'select'+count;
+		    input.placeholder = "Element "+count;
+		    input.type = "text"; //Type of field - can be any valid input type like text,file,checkbox etc.
+		    div.appendChild(input);
+
+		    field_area.appendChild(div);
+		    //create the removal link
+		    var removalLink = document.createElement('a');
+		    removalLink.onclick = function(){
+		        this.parentNode.parentNode.removeChild(this.parentNode)
+		    }
+		    var removalText = document.createTextNode('Remove');
+		    removalLink.appendChild(removalText);
+		    div.appendChild(removalLink);
+		}
+
+		function majOptionField(option){
+			var inputOption = '';
+			// Récupération des valeurs de tous les champs cachés portant la class .option-field
+			var elems = document.getElementsByTagName('input'), i;
+
+			var numberOfOptions = countElementsByClassName('option-field');
+		    var iterationCount = 0;
+
+		    for (i in elems) {
+		        if((' ' + elems[i].className + ' ').indexOf(' ' + 'option-field' + ' ') > -1) {
+		        	if(iterationCount == numberOfOptions-1){
+		        		inputOption += elems[i].value;
+		        	}else{
+		        		inputOption += elems[i].value+',';
+		        	}
+		        	iterationCount++;
+		        }
+		    }
+
+		    // Mise à jout du champ des options
+		    var optionsJSON = '{ "options": ['+inputOption+'] }';
+			document.getElementById('form_optionalfield').value = optionsJSON;
+		}
+
+		function countElementsByClassName(class_name) {
+		    var elems = document.getElementsByTagName('*'), i;
+		    var count = 0;
+		    for (i in elems) {
+		        if((' ' + elems[i].className + ' ').indexOf(' ' + class_name + ' ') > -1) {
+		        	count++;
+		        }
+		    }
+		    return count;
+		}
+
+
+	</script>
+
+	<!-- Chargement des ressoureces spécifiques à cette page -->
+    {% javascripts 
+        '@LapaillasseCampaignBundle/Resources/public/js/optional-fields-builder.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

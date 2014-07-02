@@ -1,0 +1,6 @@
+Lapaillasse\CampaignBundle\Entity\Campaign:
+    properties:
+        name:
+            - NotBlank: ~
+        description:
+            - NotBlank: ~

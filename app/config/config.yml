@@ -30,7 +30,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [ ]
+    bundles:        [ LapaillasseCampaignBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -59,8 +59,37 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
+    transport: smtp
+    encryption: ssl
+    auth_mode:  login
+    host:      smtp.gmail.com
+    username:  pierre.mary10@gmail.com
+    password:  00:39Google2!
     spool:     { type: memory }
+
+# FOSUserBundle configuration
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Lapaillasse\UserBundle\Entity\User
+    # Configure the sender mail address
+    registration:
+        confirmation:
+            enabled: true
+            template: LapaillasseUserBundle:Email:registration.email.html.twig
+            from_email:
+                address:        registration@campaign-manager.com
+                sender_name:    Campaign Manager Registration
+        form:
+            type: lapaillasse_user_registration
+    resetting:
+        email:
+            from_email:
+                address:        resetting@campaign-manager.com
+                sender_name:    Campaign Manager Resetting
+    from_email:
+        address:        noreply@campaign-manager.com
+        sender_name:    Emetteur test
+    # Mailer config
+    service:
+        mailer: fos_user.mailer.twig_swift

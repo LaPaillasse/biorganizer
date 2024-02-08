@@ -1,0 +1,7 @@
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    Hello {{app.user.username}} !
+    <a href="{{ path('fos_user_security_logout') }}">logout ?</a>
+    <a href="{{ path('lapaillasse_user_profil_edit') }}">You can edit your profil</a>
+{% else %}
+	Hello, you are not register. Please <a href="{{ path('fos_user_security_login') }}">sign up</a>
+{% endif %}

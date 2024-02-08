@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome to campaign manager!{% endblock %}</title>
+        
+        {% block stylesheets %}
+        {% endblock %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        {% stylesheets '@LapaillasseCampaignBundle/Resources/public/css/*' output='css/style.css' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div id="page">
+            <header id="master-header" role="banner">
+
+                <div id="navbar">
+                    <nav id="site-navigation">
+                        <ul>
+                            <li><a href="{{ path('lapaillasse_campaign_homepage') }}" id="home">Campaign Manager</a></li>
+                            <li><a href="{{ path('lapaillasse_campaign_mappage') }}">Map</a></li>
+                        </ul>
+                        <div id="menu-account">
+                            <ul>
+                                <li>
+
+                                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                        <a href="#">{{app.user.username}} <span></span></a>                                        
+                                        <ul class="nav-menu">
+                                            <li>
+                                                <a href="{{ path('lapaillasse_campaign_new_campaign') }}">New campaign</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('fos_user_security_logout') }}">Logout</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="{{ path('fos_user_profile_show') }}">Profil</a>
+                                            </li>
+                                        </ul>
+                                    {% else %}
+                                        <a href="{{ path('fos_user_security_login') }}">Sign up</a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+
+                {% block banner %}{% endblock %}
+
+            </header>
+
+            <div id="main">
+                <div id="primary" class="content-area">
+
+                    {% block body %}{% endblock %}
+
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
